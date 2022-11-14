@@ -7,6 +7,10 @@ CREATE TABLE `characters` (
     `gender` VARCHAR(50) NULL DEFAULT NULL,
     `cash` INT(10) NULL DEFAULT '0',
     `bank` INT(10) NULL DEFAULT '0',
+    `phone_number` VARCHAR(20) NULL DEFAULT NULL,
+    `groups` LONGTEXT NULL DEFAULT '[]',
     `last_location` LONGTEXT NULL DEFAULT '[]',
+    `clothing` LONGTEXT NULL DEFAULT '[]',
+    `inventory` LONGTEXT NULL DEFAULT '[]',
     PRIMARY KEY (`character_id`) USING BTREE
 );
