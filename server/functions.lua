@@ -215,7 +215,11 @@ function AyseCore.Functions.SetActiveCharacter(player, characterId)
             gender = i.gender,
             cash = i.cash,
             bank = i.bank,
-            lastLocation = json.decode(i.last_location)
+            phoneNumber = i.phone_number,
+            groups = json.decode(i.groups),
+            lastLocation = json.decode(i.last_location),
+            clothing = json.decode(i.clothing),
+            inventory = json.decode(i.inventory)
         }
     end
     TriggerEvent("Ayse:characterLoaded", AyseCore.Players[player])
@@ -227,7 +231,7 @@ function AyseCore.Functions.GetPlayerCharacters(player)
     local result = MySQL.query.await("SELECT * FROM characters WHERE license = ?", {AyseCore.Functions.GetPlayerIdentifierFromType("license", player)})
     for i = 1, #result do
         local temp = result[i]
-        characters[temp.character_id] = {id = temp.character_id, firstName = temp.first_name, lastName = temp.last_name, dob = temp.dob, gender = temp.gender, cash = temp.cash, bank = temp.bank, lastLocation = json.decode(temp.last_location)}
+        characters[temp.character_id] = {id = temp.character_id, firstName = temp.first_name, lastName = temp.last_name, dob = temp.dob, gender = temp.gender, cash = temp.cash, bank = temp.bank, phoneNumber = temp.phone_number, groups = json.decode(temp.groups), lastLocation = json.decode(temp.last_location), clothing = json.decode(temp.clothing)}
     end
     return characters
 end
@@ -256,8 +260,32 @@ function AyseCore.Functions.DeleteCharacter(characterId)
     return result
 end
 
+function AyseCore.Functions.UpdateGroups(player, groups)
+    local result = MySQL.query.await("UPDATE characters SET groups = ? WHERE character_id = ?", {json.encode(groups), AyseCore.Players[player].id})
+    return result
+end
+
+function AyseCore.Functions.SetGroup(player, group, groupName, groupLevel)
+    local groups = AyseCore.Players[player].groups
+    groups[group] = {name = groupName, lvl = groupLevel}
+    result = MySQL.query.await("UPDATE characters SET groups = ? WHERE character_id = ?", {json.encode(groups), AyseCore.Players[player].id})
+    return result
+end
+
+function AyseCore.Functions.RemoveGroup(player, group)
+    local groups = AyseCore.Players[player].groups
+    groups[group] = nil
+    result = MySQL.query.await("UPDATE characters SET groups = ? WHERE character_id = ?", {json.encode(groups), AyseCore.Players[player].id})
+    return result
+end
+
 function AyseCore.Functions.UpdateLastLocation(characterId, location)
     local result = MySQL.query.await("UPDATE characters SET last_location = ? WHERE character_id = ? LIMIT 1", {json.encode(location), characterId})
+    return result
+end
+
+function AyseCore.Functions.UpdateClothes(characterId, clothing)
+    local result = MySQL.query.await("UPDATE characters SET clothing = ? WHERE character_id = ? LIMIT 1", {json.encode(clothing), characterId})
     return result
 end
 
@@ -271,4 +299,9 @@ function AyseCore.Functions.SetPlayerData(player, key, value)
         MySQL.query.await("UPDATE characters SET bank = ? WHERE character_id = ?", {tonumber(value), character.id})
     end
     TriggerClientEvent("Ayse:updateCharacter", player, AyseCore.Players[player])
+end
+
+function AyseCore.Functions.SaveInventory(player)
+    local inventory = AyseCore.Players[player].inventory
+    MySQL.query("UPDATE `characters` SET inventory = ? WHERE character_id = ?", {json.encode(inventory), AyseCore.Players[player].id})
 end
