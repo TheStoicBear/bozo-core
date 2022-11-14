@@ -49,3 +49,8 @@ AddEventHandler("playerDropped", function()
     TriggerEvent("Ayse:characterUnloaded", player)
     character = nil
 end)
+
+RegisterNetEvent("Ayse:updateClothes", function(clothing)
+    local player = source
+    AyseCore.Functions.UpdateClothes(AyseCore.Players[player].id, clothing)
+end)
