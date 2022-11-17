@@ -222,6 +222,7 @@ function AyseCore.Functions.SetActiveCharacter(player, characterId)
             inventory = json.decode(i.inventory)
         }
     end
+    AyseCore.Commands.Refresh(player)
     TriggerEvent("Ayse:characterLoaded", AyseCore.Players[player])
     TriggerClientEvent("Ayse:setCharacter", player, AyseCore.Players[player])
 end
