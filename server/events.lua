@@ -1,3 +1,31 @@
+AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
+    local player = source
+    local discordIdentifier = AyseCore.Functions.GetPlayerIdentifierFromType("discord", player)
+
+    deferrals.defer()
+    Wait(0)
+    deferrals.update("Connecting to discord.")
+    Wait(0)
+
+    if not discordIdentifier then
+        deferrals.done("Your discord isn't connected to FiveM, make sure discord is open and restart FiveM.")
+    else
+        if config.enableDiscordWhitelist then
+            local discordUserId = discordIdentifier:gsub("discord:", "")
+            local discordInfo = AyseCore.Functions.GetUserDiscordInfo(discordUserId)
+            for _, whitelistRole in pairs(config.whitelistRoles) do
+                if whitelistRole == 0 or whitelistRole == "0" or (discordInfo and discordInfo.roles[whitelistRole]) then
+                    deferrals.done()
+                    break
+                end
+            end
+            deferrals.done(config.notWhitelistedMessage)
+        else
+            deferrals.done()
+        end
+    end
+end)
+
 AddEventHandler("onResourceStart", function(resourceName)
     if (GetCurrentResourceName() ~= resourceName) then
         return
