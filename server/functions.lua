@@ -7,6 +7,41 @@ function AyseCore.Functions.GetPlayers(players)
     cb(AyseCore.Players)
 end
 
+local discordErrors = {
+    [400] = "improper http request",
+    [401] = "Discord bot token might be missing or incorrect",
+    [404] = "user might not be in server.",
+    [429] = "Discord bot rate limited."
+}
+
+function AyseCore.Functions.GetUserDiscordInfo(discordUserId)
+    local data
+    local timeout = 0
+    PerformHttpRequest("https://discordapp.com/api/guilds/" .. server_config.guildId .. "/members/" .. discordUserId, function(errorCode, resultData, resultHeaders)
+        if errorCode ~= 200 then
+            print("Error: " .. errorCode .. " " .. discordErrors[errorCode])
+        end
+        local result = json.decode(resultData)
+        local roles = {}
+        for _, roleId in pairs(result.roles) do
+            roles[roleId] = roleId
+        end
+        data = {
+            nickname = result.nick,
+            discordTag = tostring(result.user.username) .. "#" .. tostring(result.user.discriminator),
+            roles = roles
+        }
+    end, "GET", "", {["Content-Type"] = "application/json", ["Authorization"] = "Bot " .. server_config.discordServerToken})
+    while not data do
+        Wait(1000)
+        timeout = timeout + 1
+        if timeout > 5 then
+            break
+        end
+    end
+    return data
+end
+
 function AyseCore.Functions.GetPlayerIdentifierFromType(type, player)
     local identifierCount = GetNumPlayerIdentifiers(player)
     for count = 0, identifierCount do
