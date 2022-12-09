@@ -1,9 +1,20 @@
 config = {
     serverName = "AyseFramework",
-    characterLimit = 1, -- How many characters the player can create.
-    customPauseMenu = true, -- A custom pause menu will display your money, characters name and the server name in the pause menu.
-    enablePVP = true, -- pvp allows doing damage to other players.
+    characterLimit = 1,
+    customPauseMenu = true,
+    enablePVP = true,
     
-    startingCash = 2500, -- default cash the character will start with if the character creator doesn't specify it.
-    startingBank = 8000, -- default money in the bank account the character will start with if the character creator doesn't specify it.
+    startingCash = 2500,
+    startingBank = 8000,
+    
+    enableDiscordWhitelist = true,
+    notWhitelistedMessage = "You're not allowlisted in this server please join our discord to apply for a allowlist: https://discord.gg/TZfCJXKtYx",
+    whitelistRoles = {
+        "1029724677632954420"
+    }
+}
+
+server_config = {
+    discordServerToken = "MTAyOTMwNjc5MDEyMDI4MDExNA.GWnUbN.tLaHbyj7DFsacYFb8yVdjvb992osDy_bIZ4Y2c",
+    guildId = "1029723778009280523",
 }
