@@ -18,6 +18,24 @@ function AyseCore.Functions.GetCharacters(cb)
     cb(AyseCore.Characters)
 end
 
+if config.enableRichPresence then
+    Citizen.CreateThread(function()
+        while true do
+            if AyseCore.SelectedCharacter then
+                SetDiscordAppId(config.appId)
+                SetRichPresence(" Playing : " .. config.serverName .. " as " .. AyseCore.SelectedCharacter.firstName .. " " .. AyseCore.SelectedCharacter.lastName)
+                SetDiscordRichPresenceAsset(config.largeLogo)
+                SetDiscordRichPresenceAssetText("Playing: " .. config.serverName)
+                SetDiscordRichPresenceAssetSmall(config.smallLogo)
+                SetDiscordRichPresenceAssetSmallText("Playing as: " .. AyseCore.SelectedCharacter.firstName .. " " .. AyseCore.SelectedCharacter.lastName)
+                SetDiscordRichPresenceAction(0, config.firstButtonName, config.firstButtonLink)
+                SetDiscordRichPresenceAction(1, config.secondButtonName, config.secondButtonLink)
+            end
+            Citizen.Wait(config.updateIntervall * 1000)
+        end
+    end)
+end
+
 if config.customPauseMenu then
     Citizen.CreateThread(function()
         while true do
