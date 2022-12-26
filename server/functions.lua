@@ -13,7 +13,6 @@ local discordErrors = {
     [404] = "user might not be in server.",
     [429] = "Discord bot rate limited."
 }
-
 function AyseCore.Functions.GetUserDiscordInfo(discordUserId)
     local data
     local timeout = 0
@@ -236,7 +235,7 @@ end
 
 function AyseCore.Functions.SetActiveCharacter(player, characterId)
     if AyseCore.Players[player] then
-        AyseCore.Functions.SaveInventory(player)
+        TriggerEvent("Ayse:characterUnloaded", player, AyseCore.Players[player])
     end
     local result = MySQL.query.await("SELECT * FROM characters WHERE character_id = ? LIMIT 1", {characterId})
     if result then
@@ -248,6 +247,7 @@ function AyseCore.Functions.SetActiveCharacter(player, characterId)
             lastName = i.last_name,
             dob = i.dob,
             gender = i.gender,
+            job = i.job,
             cash = i.cash,
             bank = i.bank,
             phoneNumber = i.phone_number,
@@ -267,12 +267,12 @@ function AyseCore.Functions.GetPlayerCharacters(player)
     local result = MySQL.query.await("SELECT * FROM characters WHERE license = ?", {AyseCore.Functions.GetPlayerIdentifierFromType("license", player)})
     for i = 1, #result do
         local temp = result[i]
-        characters[temp.character_id] = {id = temp.character_id, firstName = temp.first_name, lastName = temp.last_name, dob = temp.dob, gender = temp.gender, cash = temp.cash, bank = temp.bank, phoneNumber = temp.phone_number, groups = json.decode(temp.groups), lastLocation = json.decode(temp.last_location), clothing = json.decode(temp.clothing)}
+        characters[temp.character_id] = {id = temp.character_id, firstName = temp.first_name, lastName = temp.last_name, dob = temp.dob, gender = temp.gender, job = temp.job, cash = temp.cash, bank = temp.bank, phoneNumber = temp.phone_number, groups = json.decode(temp.groups), lastLocation = json.decode(temp.last_location), clothing = json.decode(temp.clothing)}
     end
     return characters
 end
 
-function AyseCore.Functions.CreateCharacter(player, firstName, lastName, dob, gender, cash, bank)
+function AyseCore.Functions.CreateCharacter(player, firstName, lastName, dob, gender, job, cash, bank)
     local license = AyseCore.Functions.GetPlayerIdentifierFromType("license", player)
     if not cash or not bank or tonumber(cash) > config.startingCash or tonumber(bank) > config.startingBank then
         cash = config.startingCash
@@ -280,14 +280,14 @@ function AyseCore.Functions.CreateCharacter(player, firstName, lastName, dob, ge
     end
     local result = MySQL.query.await("SELECT character_id FROM characters WHERE license = ?", {license})
     if result and config.characterLimit > #result then
-        MySQL.query.await("INSERT INTO characters (license, first_name, last_name, dob, gender, cash, bank) VALUES (?, ?, ?, ?, ?, ?, ?)", {license, firstName, lastName, dob, gender, cash, bank})
+        MySQL.query.await("INSERT INTO characters (license, first_name, last_name, dob, gender, job, cash, bank) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", {license, firstName, lastName, dob, gender, job, cash, bank})
         TriggerClientEvent("Ayse:returnCharacters", player, AyseCore.Functions.GetPlayerCharacters(player))
     end
     return result
 end
 
-function AyseCore.Functions.UpdateCharacterData(characterId, firstName, lastName, dob, gender)
-    local result = MySQL.query.await("UPDATE characters SET first_name = ?, last_name = ?, dob = ?, gender = ?, WHERE character_id = ? LIMIT 1", {firstName, lastName, dob, gender, characterId})
+function AyseCore.Functions.UpdateCharacterData(characterId, firstName, lastName, dob, gender, job)
+    local result = MySQL.query.await("UPDATE characters SET first_name = ?, last_name = ?, dob = ?, gender = ?, job = ? WHERE character_id = ? LIMIT 1", {firstName, lastName, dob, gender, job, characterId})
     return result
 end
 
