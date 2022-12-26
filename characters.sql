@@ -5,6 +5,7 @@ CREATE TABLE `characters` (
     `last_name` VARCHAR(50) NULL DEFAULT NULL,
     `dob` VARCHAR(50) NULL DEFAULT NULL,
     `gender` VARCHAR(50) NULL DEFAULT NULL,
+    `job` VARCHAR(50) NULL DEFAULT NULL,
     `cash` INT(10) NULL DEFAULT '0',
     `bank` INT(10) NULL DEFAULT '0',
     `phone_number` VARCHAR(20) NULL DEFAULT NULL,
