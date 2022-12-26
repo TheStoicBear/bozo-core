@@ -20,3 +20,12 @@ CreateThread(function()
         end
     end
 end)
+
+AddEventHandler("onResourceStart", function(resourceName)
+    Wait(3000)
+    if resourceName ~= "ox_inventory" then return end
+    SetConvarReplicated("inventory:framework", "ayse")
+end)
+if GetResourceState("ox_inventory") == "started" then
+    SetConvarReplicated("inventory:framework", "ayse")
+end
