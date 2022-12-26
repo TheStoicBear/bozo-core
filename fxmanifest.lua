@@ -1,6 +1,6 @@
 author "helmimarif"
 description "AyseFramework Core"
-version "5.0"
+version "6.0"
 
 fx_version "cerulean"
 game "gta5"
@@ -11,7 +11,6 @@ client_scripts {
     "client/main.lua",
     "client/events.lua"
 }
-
 server_scripts {
     "@oxmysql/lib/MySQL.lua",
     "server/main.lua",
@@ -23,7 +22,6 @@ server_scripts {
 exports {
     "GetCoreObject"
 }
-
 server_exports {
     "GetCoreObject"
 }
