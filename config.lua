@@ -13,6 +13,10 @@ config = {
         "1029724677632954420"
     },
 
+    adminRoles = {
+        "1053933987514548245"
+    },
+
     enableRichPresence = true,
     updateIntervall = 60,
     appId = 1029306790120280114,
@@ -21,7 +25,20 @@ config = {
     firstButtonName = "DISCORD",
     firstButtonLink = "https://discord.gg/TZfCJXKtYx",
     secondButtonName = "JOIN",
-    secondButtonLink = "https://cfx.re/join/yybb9k"
+    secondButtonLink = "https://cfx.re/join/yybb9k",
+
+    groups = {
+        ["Ballas"] = {
+            "Member", -- rank 1
+            "Boss" -- rank 2
+        },
+        ["SWAT"] = {
+            "Member", -- rank 1
+            "Sniper", -- rank 2
+            "Team lead", -- rank 3
+            "Commander" -- rank 4
+        }
+    },
 }
 
 server_config = {
