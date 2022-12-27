@@ -26,14 +26,6 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
     end
 end)
 
-AddEventHandler("onResourceStart", function(resourceName)
-    if (GetCurrentResourceName() ~= resourceName) then
-        return
-    end
-    MySQL.query("CREATE TABLE IF NOT EXISTS characters ( `character_id` INT(10) NOT NULL AUTO_INCREMENT, `license` VARCHAR(200) NOT NULL DEFAULT '0', `first_name` VARCHAR(50) NULL DEFAULT NULL, `last_name` VARCHAR(50) NULL DEFAULT NULL, `dob` VARCHAR(50) NULL DEFAULT NULL, `gender` VARCHAR(50) NULL DEFAULT NULL,`twt` VARCHAR(50) NULL DEFAULT NULL, `job` VARCHAR(50) NULL DEFAULT NULL, `cash` INT(10) NULL DEFAULT '0', `bank` INT(10) NULL DEFAULT '0', `phone_number` VARCHAR(20) NULL DEFAULT NULL, `groups` LONGTEXT NULL DEFAULT '[]', `last_location` LONGTEXT NULL DEFAULT '[]',  `clothing` LONGTEXT NULL DEFAULT '[]', PRIMARY KEY (`character_id`) USING BTREE);")
-    print('^4Ayse_Core ^0Database structure validated!')
-end)
-
 RegisterNetEvent("Ayse:GetCharacters", function()
     local player = source
     TriggerClientEvent("Ayse:returnCharacters", player, AyseCore.Functions.GetPlayerCharacters(player))
@@ -41,14 +33,14 @@ end)
 
 RegisterNetEvent("Ayse:newCharacter", function(newCharacter)
     local player = source
-    AyseCore.Functions.CreateCharacter(player, newCharacter.firstName, newCharacter.lastName, newCharacter.dob, newCharacter.gender, newCharacter.twt, newCharacter.job, newCharacter.cash, newCharacter.bank)
+    AyseCore.Functions.CreateCharacter(player, newCharacter.firstName, newCharacter.lastName, newCharacter.dob, newCharacter.gender, newCharacter.cash, newCharacter.bank)
 end)
 
 RegisterNetEvent("Ayse:editCharacter", function(newCharacter)
     local player = source
     local characters = AyseCore.Functions.GetPlayerCharacters(player)
     if not characters[newCharacter.id] then return end
-    AyseCore.Functions.UpdateCharacterData(newCharacter.id, newCharacter.firstName, newCharacter.lastName, newCharacter.dob, newCharacter.gender, newCharacter.twt, newCharacter.job)
+    AyseCore.Functions.UpdateCharacterData(newCharacter.id, newCharacter.firstName, newCharacter.lastName, newCharacter.dob, newCharacter.gender)
 end)
 
 RegisterNetEvent("Ayse:deleteCharacter", function(characterId)
@@ -63,6 +55,11 @@ RegisterNetEvent("Ayse:setCharacterOnline", function(id)
     local characters = AyseCore.Functions.GetPlayerCharacters(player)
     if not characters[id] then return end
     AyseCore.Functions.SetActiveCharacter(player, id)
+end)
+
+RegisterNetEvent("Ayse:updateClothes", function(clothing)
+    local player = source
+    AyseCore.Functions.SetPlayerData(player, "clothing", clothing)
 end)
 
 RegisterNetEvent("Ayse:exitGame", function()
@@ -80,7 +77,23 @@ AddEventHandler("playerDropped", function()
     character = nil
 end)
 
-RegisterNetEvent("Ayse:updateClothes", function(clothing)
-    local player = source
-    AyseCore.Functions.UpdateClothes(AyseCore.Players[player].id, clothing)
+AddEventHandler("playerJoining", function()
+    local src = source
+    local discordUserId = AyseCore.Functions.GetPlayerIdentifierFromType("discord", src):gsub("discord:", "")
+    local discordInfo = AyseCore.Functions.GetUserDiscordInfo(discordUserId)
+    AyseCore.PlayersDiscordInfo[src] = discordInfo
+end)
+
+AddEventHandler("onResourceStart", function(resourceName)
+    if (GetCurrentResourceName() ~= resourceName) then
+        return
+    end 
+    Wait(1000)
+    if not next(AyseCore.PlayersDiscordInfo) then
+        for _, playerId in ipairs(GetPlayers()) do
+            local discordUserId = AyseCore.Functions.GetPlayerIdentifierFromType("discord", playerId):gsub("discord:", "")
+            local discordInfo = AyseCore.Functions.GetUserDiscordInfo(discordUserId)
+            AyseCore.PlayersDiscordInfo[tonumber(playerId)] = discordInfo
+        end
+    end
 end)
