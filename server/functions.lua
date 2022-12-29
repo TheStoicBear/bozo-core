@@ -12,7 +12,7 @@ function AyseCore.Functions.GetPlayers(getBy, value)
             if playerInfo.data.groups then
                 local valueGroup = value:lower()
                 for group, _ in pairs(playerInfo.data.groups) do
-                    if group.lower() == valueGroup then
+                    if group and group:lower() == valueGroup then
                         players[player] = playerInfo
                     end
                 end
@@ -43,12 +43,28 @@ function AyseCore.Functions.GetUserDiscordInfo(discordUserId)
         end
         local result = json.decode(resultData)
         local roles = {}
-        for _, roleId in pairs(result.roles) do
-            roles[roleId] = roleId
+        local nickname = ""
+        local tag = ""
+        if result and result.roles then
+            for _, roleId in pairs(result.roles) do
+                roles[roleId] = roleId
+            end
+            if result.nick then
+                nickname = result.nick
+            end
+            if result.user and result.user.username and result.user.discriminator then
+                tag = tostring(result.user.username) .. "#" .. tostring(result.user.discriminator)
+            end
+            data = {
+                nickname = nickname,
+                discordTag = tag,
+                roles = roles
+            }
+            return
         end
         data = {
-            nickname = result.nick,
-            discordTag = tostring(result.user.username) .. "#" .. tostring(result.user.discriminator),
+            nickname = nickname,
+            discordTag = tag,
             roles = roles
         }
     end, "GET", "", {["Content-Type"] = "application/json", ["Authorization"] = "Bot " .. server_config.discordServerToken})
@@ -95,7 +111,7 @@ function AyseCore.Functions.UpdateMoney(player)
     end
 end
 
-function AyseCore.Functions.TransferBank(amount, player, target)
+function AyseCore.Functions.TransferBank(amount, player, target, descriptionSender, descriptionReceiver)
     local amount = tonumber(amount)
     local player = tonumber(player)
     local target = tonumber(target)
@@ -126,7 +142,7 @@ function AyseCore.Functions.TransferBank(amount, player, target)
     else
         MySQL.query.await("UPDATE characters SET bank = bank - ? WHERE character_id = ?", {amount, AyseCore.Players[player].id})
         AyseCore.Functions.UpdateMoney(player)
-        TriggerEvent("Ayse:moneyChange", player, "bank", amount, "remove")
+        TriggerEvent("Ayse:moneyChange", player, "bank", amount, "remove", descriptionSender or "Transfer")
         TriggerClientEvent("chat:addMessage", player, {
             color = {0, 255, 0},
             args = {"Success", "You paid " .. AyseCore.Players[target].firstName .. " " .. AyseCore.Players[target].lastName .. " $" .. amount .. "."}
@@ -134,7 +150,7 @@ function AyseCore.Functions.TransferBank(amount, player, target)
         
         MySQL.query.await("UPDATE characters SET bank = bank + ? WHERE character_id = ?", {amount, AyseCore.Players[target].id})
         AyseCore.Functions.UpdateMoney(target)
-        TriggerEvent("Ayse:moneyChange", target, "bank", amount, "add")
+        TriggerEvent("Ayse:moneyChange", target, "bank", amount, "add", descriptionReceiver or "Transfer")
         TriggerClientEvent("chat:addMessage", target, {
             color = {0, 255, 0},
             args = {"Success", AyseCore.Players[player].firstName .. " " .. AyseCore.Players[player].lastName .. " sent you $" .. amount .. "."}
@@ -306,7 +322,7 @@ function AyseCore.Functions.GetPlayerCharacters(player)
     return characters
 end
 
-function AyseCore.Functions.CreateCharacter(player, firstName, lastName, dob, gender, cash, bank)
+function AyseCore.Functions.CreateCharacter(player, firstName, lastName, dob, gender, cash, bank, cb)
     local characterId = false
     local license = AyseCore.Functions.GetPlayerIdentifierFromType("license", player)
     if not cash or not bank or tonumber(cash) > config.startingCash or tonumber(bank) > config.startingBank then
@@ -316,6 +332,7 @@ function AyseCore.Functions.CreateCharacter(player, firstName, lastName, dob, ge
     local result = MySQL.query.await("SELECT character_id FROM characters WHERE license = ?", {license})
     if result and config.characterLimit > #result then
         characterId = MySQL.insert.await("INSERT INTO characters (license, first_name, last_name, dob, gender, cash, bank) VALUES (?, ?, ?, ?, ?, ?, ?)", {license, firstName, lastName, dob, gender, cash, bank})
+        if cb then cb(characterId) end
         TriggerClientEvent("Ayse:returnCharacters", player, AyseCore.Functions.GetPlayerCharacters(player))
     end
     return characterId
@@ -345,30 +362,28 @@ function AyseCore.Functions.SetPlayerData(characterId, key, value)
             AyseCore.Players[player][key] = value
             TriggerEvent("Ayse:moneyChange", player, "cash", tonumber(value), "set")
         end
-        MySQL.query("UPDATE characters SET cash = ? WHERE character_id = ?", {tonumber(value), characterId})
+        MySQL.query.await("UPDATE characters SET cash = ? WHERE character_id = ?", {tonumber(value), characterId})
     elseif key == "bank" then
         if player then
             AyseCore.Players[player][key] = value
             TriggerEvent("Ayse:moneyChange", player, "bank", tonumber(value), "set")
         end
-        MySQL.query("UPDATE characters SET bank = ? WHERE character_id = ?", {tonumber(value), characterId})
+        MySQL.query.await("UPDATE characters SET bank = ? WHERE character_id = ?", {tonumber(value), characterId})
     elseif key == "job" then
         if player then
             AyseCore.Players[player].job = value
         end
-        MySQL.query("UPDATE characters SET job = ? WHERE character_id = ?", {value, characterId})
+        MySQL.query.await("UPDATE characters SET job = ? WHERE character_id = ?", {value, characterId})
     else
         if player then
             AyseCore.Players[player].data[key] = value
-            MySQL.query("UPDATE characters SET `data` = ? WHERE character_id = ?", {json.encode(AyseCore.Players[player].data), characterId})
+            MySQL.query.await("UPDATE characters SET `data` = ? WHERE character_id = ?", {json.encode(AyseCore.Players[player].data), characterId})
         else
-            MySQL.query("SELECT `data` FROM characters WHERE character_id = ?", {characterId}, function(result)
-                if result and result[1] then
-                    local data = json.decode(result[1].data)
-                    data[key] = value
-                    MySQL.query("UPDATE characters SET `data` = ? WHERE character_id = ?", {json.encode(data), characterId})
-                end
-            end)
+            local result = MySQL.query.await("SELECT `data` FROM characters WHERE character_id = ?", {characterId})
+            if not result or not result[1] then return end
+            local data = json.decode(result[1].data)
+            data[key] = value
+            MySQL.query.await("UPDATE characters SET `data` = ? WHERE character_id = ?", {json.encode(data), characterId})
         end
     end
     if not player then return end
@@ -513,25 +528,28 @@ function AyseCore.Functions.SetPlayerToGroup(characterId, group, rank)
         return true
     end
     local result = MySQL.query.await("SELECT data FROM characters WHERE character_id = ?", {characterId})
-    if result and result[1] then
-        local data = result[1].data
-        if not data.groups then
-            data.groups = {}
-        end
-        local rankName = tostring(groupRank)
-        if config.groups[group] and config.groups[group][groupRank] then
-            rankName = config.groups[group][groupRank]
-        end
-        data.groups[group] = {
-            rank = groupRank,
-            rankName = rankName
-        }
-        AyseCore.Functions.SetPlayerData(characterId, "groups", data.groups)
-        return true
+    if not result or not result[1] then return end
+    local data = json.decode(result[1].data)
+    if not data then
+        data = {}
     end
+    if not data.groups then
+        data.groups = {}
+    end
+    local rankName = tostring(groupRank)
+    if config.groups[group] and config.groups[group][groupRank] then
+        rankName = config.groups[group][groupRank]
+    end
+    data.groups[group] = {
+        rank = groupRank,
+        rankName = rankName
+    }
+    AyseCore.Functions.SetPlayerData(characterId, "groups", data.groups)
+    return true
 end
 
 function AyseCore.Functions.RemovePlayerFromGroup(characterId, group)
+    if not group then return end
     local group = group:lower()
     for groupName, groupRanks in pairs(config.groups) do
         if groupName:lower() == group then
