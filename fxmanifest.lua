@@ -1,12 +1,11 @@
 author "helmimarif"
 description "AyseFramework Core"
-version "7.0"
+version "8.0"
 
 fx_version "cerulean"
 game "gta5"
 lua54 "yes"
 
-shared_script "config.lua"
 shared_scripts {
     "config.lua",
     "shared/main.lua"
