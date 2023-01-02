@@ -1,0 +1,1 @@
+AyseCore = exports["Ayse_Core"]:GetCoreObject()
