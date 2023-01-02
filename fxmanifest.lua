@@ -1,6 +1,6 @@
 author "helmimarif"
 description "AyseFramework Core"
-version "8.0"
+version "9.0"
 
 fx_version "cerulean"
 game "gta5"
@@ -13,14 +13,16 @@ shared_scripts {
 client_scripts {
     "client/main.lua",
     "client/functions.lua",
-    "client/events.lua"
+    "client/events.lua",
+    "shared/import.lua"
 }
 server_scripts {
     "@oxmysql/lib/MySQL.lua",
     "server/main.lua",
     "server/functions.lua",
     "server/events.lua",
-    "server/commands.lua"
+    "server/commands.lua",
+    "shared/import.lua"
 }
 
 exports {
