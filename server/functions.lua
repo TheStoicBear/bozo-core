@@ -631,3 +631,45 @@ function AyseCore.Functions.IsPlayerAdmin(src)
         end
     end
 end
+
+AyseCore.callback = {}
+local events = {}
+
+RegisterNetEvent("Ayse:callbacks", function(key, ...)
+	local cb = events[key]
+	return cb and cb(...)
+end)
+
+function triggerCallback(_, name, playerId, cb, ...)
+	local key = ("%s:%s:%s"):format(name, math.random(0, 100000), playerId)
+	TriggerClientEvent(("Ayse:%s_cb"):format(name), playerId, key, ...)
+	local promise = not cb and promise.new()
+	events[key] = function(response, ...)
+        response = { response, ... }
+		events[key] = nil
+		if promise then
+			return promise:resolve(response)
+		end
+        if cb then
+            cb(table.unpack(response))
+        end
+	end
+	if promise then
+		return table.unpack(Citizen.Await(promise))
+	end
+end
+
+setmetatable(AyseCore.callback, {
+	__call = triggerCallback
+})
+
+function AyseCore.callback.await(name, playerId, ...)
+    return triggerCallback(nil, name, playerId, false, ...)
+end
+
+function AyseCore.callback.register(name, callback)
+    RegisterNetEvent(("Ayse:%s_cb"):format(name), function(key, ...)
+        local src = source
+        TriggerClientEvent("Ayse:callbacks", src, key, callback(src, ...))
+    end)
+end
