@@ -28,15 +28,29 @@ config = {
     secondButtonLink = "https://cfx.re/join/yybb9k",
 
     groups = {
-        ["Gank"] = {
+        ["Ballas"] = {
             "Member", -- rank 1
             "Boss" -- rank 2
         },
-        ["Police"] = {
+        ["SWAT"] = {
             "Member", -- rank 1
             "Sniper", -- rank 2
             "Team lead", -- rank 3
             "Commander" -- rank 4
+        },
+        ["Police"] = {
+            "Officer",
+            "Senior officer",
+            "Corporal",
+            "Sergeant",
+            "Lieutenant",
+            "Cheif"
+        },
+        ["EMS"] = {
+            "Co-Ass",
+            "EMS/EMT",
+            "Doctor",
+            "Doctor of Medicine"
         }
     },
 }
