@@ -59,7 +59,8 @@ end)
 
 RegisterNetEvent("Ayse:updateClothes", function(clothing)
     local player = source
-    AyseCore.Functions.SetPlayerData(player, "clothing", clothing)
+    local character = AyseCore.Players[player]
+    AyseCore.Functions.SetPlayerData(character.id, "clothing", clothing)
 end)
 
 RegisterNetEvent("Ayse:exitGame", function()
