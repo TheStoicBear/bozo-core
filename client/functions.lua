@@ -10,6 +10,26 @@ function AyseCore.Functions.GetCharacters()
     return AyseCore.Characters
 end
 
+function AyseCore.Functions.GetPlayersFromCoords(distance, coords)
+    if coords then
+        coords = type(coords) == 'table' and vec3(coords.x, coords.y, coords.z) or coords
+    else
+        coords = GetEntityCoords(PlayerPedId())
+    end
+    distance = distance or 5
+    local closePlayers = {}
+    local players = GetActivePlayers()
+    for _, player in ipairs(players) do
+        local target = GetPlayerPed(player)
+        local targetCoords = GetEntityCoords(target)
+        local targetdistance = #(targetCoords - coords)
+        if targetdistance <= distance then
+            closePlayers[#closePlayers + 1] = player
+        end
+    end
+    return closePlayers
+end
+
 AyseCore.callback = {}
 local events = {}
 
