@@ -1,6 +1,6 @@
 config = {
     serverName = "AyseFramework",
-    characterLimit = 1,
+    characterLimit = 4,
     customPauseMenu = true,
     enablePVP = true,
     
@@ -28,16 +28,6 @@ config = {
     secondButtonLink = "https://cfx.re/join/yybb9k",
 
     groups = {
-        ["Ballas"] = {
-            "Member", -- rank 1
-            "Boss" -- rank 2
-        },
-        ["SWAT"] = {
-            "Member", -- rank 1
-            "Sniper", -- rank 2
-            "Team lead", -- rank 3
-            "Commander" -- rank 4
-        },
         ["Police"] = {
             "Officer",
             "Senior officer",
@@ -47,12 +37,14 @@ config = {
             "Cheif"
         },
         ["EMS"] = {
-            "Co-Ass",
             "EMS/EMT",
-            "Doctor",
-            "Doctor of Medicine"
+            "Doctor"
+        },
+        ["Mechanic"] = {
+            "Member",
+            "Boss"
         }
-    },
+    }
 }
 
 server_config = {
