@@ -72,7 +72,9 @@ AddEventHandler("playerDropped", function()
     local player = source
     local character = AyseCore.Players[player]
     if character then
-        AyseCore.Functions.UpdateLastLocation(character.id, character.lastLocation)
+        local ped = GetPlayerPed(player)
+        local lastLocation = GetEntityCoords(ped)
+        AyseCore.Functions.UpdateLastLocation(character.id, {x = lastLocation.x, y = lastLocation.y, z = lastLocation.z})
     end
     TriggerEvent("Ayse:characterUnloaded", player, character)
     character = nil
