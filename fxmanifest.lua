@@ -1,6 +1,6 @@
 author "helmimarif"
 description "AyseFramework Core"
-version "11.0"
+version "12.0"
 
 fx_version "cerulean"
 game "gta5"
