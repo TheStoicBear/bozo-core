@@ -1,1 +1,1 @@
-AyseCore = exports["Ayse_Core"]:GetCoreObject()
+AFCore = exports["af-core"]:GetCoreObject()
