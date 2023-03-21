@@ -1,16 +1,16 @@
 function GetCoreObject()
-    return AyseCore
+    return AFCore
 end
 
-function AyseCore.Functions.GetSelectedCharacter()
-    return AyseCore.SelectedCharacter
+function AFCore.Functions.GetSelectedCharacter()
+    return AFCore.SelectedCharacter
 end
 
-function AyseCore.Functions.GetCharacters()
-    return AyseCore.Characters
+function AFCore.Functions.GetCharacters()
+    return AFCore.Characters
 end
 
-function AyseCore.Functions.GetPlayersFromCoords(distance, coords)
+function AFCore.Functions.GetPlayersFromCoords(distance, coords)
     if coords then
         coords = type(coords) == 'table' and vec3(coords.x, coords.y, coords.z) or coords
     else
@@ -30,17 +30,17 @@ function AyseCore.Functions.GetPlayersFromCoords(distance, coords)
     return closePlayers
 end
 
-AyseCore.callback = {}
+AFCore.callback = {}
 local events = {}
 
-RegisterNetEvent("Ayse:callbacks", function(key, ...)
+RegisterNetEvent("af:callbacks", function(key, ...)
 	local cb = events[key]
 	return cb and cb(...)
 end)
 
 local function triggerCallback(_, name, cb, ...)
     local key = ("%s:%s"):format(name, math.random(0, 100000))
-	TriggerServerEvent(("Ayse:%s_cb"):format(name), key, ...)
+	TriggerServerEvent(("af:%s_cb"):format(name), key, ...)
     local promise = not cb and promise.new()
 	events[key] = function(response, ...)
         response = { response, ... }
@@ -57,16 +57,16 @@ local function triggerCallback(_, name, cb, ...)
 	end
 end
 
-setmetatable(AyseCore.callback, {
+setmetatable(AFCore.callback, {
 	__call = triggerCallback
 })
 
-function AyseCore.callback.await(name, ...)
+function AFCore.callback.await(name, ...)
     return triggerCallback(nil, name, false, ...)
 end
 
-function AyseCore.callback.register(name, callback)
-    RegisterNetEvent(("Ayse:%s_cb"):format(name), function(key, ...)
-        TriggerServerEvent("Ayse:callbacks", key, callback(...))
+function AFCore.callback.register(name, callback)
+    RegisterNetEvent(("af:%s_cb"):format(name), function(key, ...)
+        TriggerServerEvent("af:callbacks", key, callback(...))
     end)
 end
