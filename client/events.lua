@@ -1,20 +1,20 @@
-RegisterNetEvent("Ayse:returnCharacters", function(characters)
-    AyseCore.Characters = characters
+RegisterNetEvent("af:returnCharacters", function(characters)
+    AFCore.Characters = characters
 end)
 
-RegisterNetEvent("Ayse:updateMoney", function(cash, bank)
-    AyseCore.SelectedCharacter.cash = cash
-    AyseCore.SelectedCharacter.bank = bank
+RegisterNetEvent("af:updateMoney", function(cash, bank)
+    AFCore.SelectedCharacter.cash = cash
+    AFCore.SelectedCharacter.bank = bank
 end)
 
-RegisterNetEvent("Ayse:setCharacter", function(character)
-    AyseCore.SelectedCharacter = character
+RegisterNetEvent("af:setCharacter", function(character)
+    AFCore.SelectedCharacter = character
 end)
 
-RegisterNetEvent("Ayse:updateCharacter", function(character)
-    AyseCore.SelectedCharacter = character
+RegisterNetEvent("af:updateCharacter", function(character)
+    AFCore.SelectedCharacter = character
 end)
 
-RegisterNetEvent("Ayse:updateLastLocation", function(location)
-    AyseCore.SelectedCharacter.lastLocation = location
+RegisterNetEvent("af:updateLastLocation", function(location)
+    AFCore.SelectedCharacter.lastLocation = location
 end)
