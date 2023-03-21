@@ -1,4 +1,4 @@
-CREATE TABLE `characters` (
+CREATE TABLE IF NOT EXISTS `characters` (
     `character_id` INT(10) NOT NULL AUTO_INCREMENT,
 	`license` VARCHAR(200) NOT NULL DEFAULT '0',
 	`first_name` VARCHAR(50) DEFAULT NULL,
