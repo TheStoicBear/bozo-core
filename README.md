@@ -1,12 +1,9 @@
-<h1 align='center'>Ayse_Core</h1>
-
-## Dependency
-### [oxmysql](https://github.com/overextended/oxmysql/releases)
+<h1 align='center'>af-core</h1>
 
 ## License
 
-    Ayse_Core - AyseFramework
-    Copyright (C) 2015-2022 AyseFramework
+    AyseFramework
+    Copyright (C) 2023 helmimarif
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
