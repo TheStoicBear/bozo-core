@@ -1,5 +1,5 @@
-AyseCore.Functions.AddCommand("setmoney", "Admin command, manage player money.", function(source, args, rawCommand)
-    if not AyseCore.Functions.IsPlayerAdmin(source) then return end
+AFCore.Functions.AddCommand("setmoney", "Admin command, manage player money.", function(source, args, rawCommand)
+    if not AFCore.Functions.IsPlayerAdmin(source) then return end
     local target = tonumber(args[1])
     local action = args[2]
     local moneyType = args[3]:lower()
@@ -9,13 +9,13 @@ AyseCore.Functions.AddCommand("setmoney", "Admin command, manage player money.",
     if moneyType ~= "bank" and moneyType ~= "cash" then return end
     if action == "remove" then
         if not amount or amount < 1 then return end
-        AyseCore.Functions.DeductMoney(amount, target, moneyType)
+        AFCore.Functions.DeductMoney(amount, target, moneyType)
     elseif action == "add" then
         if not amount or amount < 1 then return end
-        AyseCore.Functions.AddMoney(amount, target, moneyType)
+        AFCore.Functions.AddMoney(amount, target, moneyType)
     elseif action == "set" then
-        local character = AyseCore.Functions.GetPlayer(target)
-        AyseCore.Functions.SetPlayerData(character.id, moneyType, amount)
+        local character = AFCore.Functions.GetPlayer(target)
+        AFCore.Functions.SetPlayerData(character.id, moneyType, amount)
     end
 end, true, {
     { name="player", help="Player server id" },
@@ -24,69 +24,53 @@ end, true, {
     { name="amount" }
 })
 
-AyseCore.Functions.AddCommand("setjob", "Admin command, set player job.", function(source, args, rawCommand)
-    if not AyseCore.Functions.IsPlayerAdmin(source) then
-        return {
-            color = {255, 0, 0},
-            args = {"Error", "you don't have access to this command."}
-        }
+AFCore.Functions.AddCommand("setjob", "Admin command, set player job.", function(source, args, rawCommand)
+    if not AFCore.Functions.IsPlayerAdmin(source) then
+        TriggerClientEvent("af-ui:Notify", source, "You dont have access to this command", "error")
+        return
     end
     local target = tonumber(args[1])
     if not target or GetPlayerPing(target) == 0 then
-        return {
-            color = {255, 0, 0},
-            args = {"Error", "target player not found."}
-        }
+        TriggerClientEvent("af-ui:Notify", source, "You dont have access to this command", "error")
+        return
     end
     local job = args[2]
     if not job then
-        return {
-            color = {255, 0, 0},
-            args = {"Error", "job required."}
-        }
+        TriggerClientEvent("af-ui:Notify", source, "Job required", "error")
+        return
     end
-    local character = AyseCore.Functions.GetPlayer(target)
-    AyseCore.Functions.SetPlayerJob(character.id, job, args[3])
-    return {
-        color = {0, 255, 0},
-        args = {"Success", GetPlayerName(target) .. " job set to " .. job .. (args[3] and " rank " .. args[3] or " rank 1.")}
-    }
+    local character = AFCore.Functions.GetPlayer(target)
+    AFCore.Functions.SetPlayerJob(character.id, job, args[3])
+    TriggerClientEvent("af-ui:Notify", source, GetPlayerName(target) .. " job set to " .. job .. (args[3] and " rank " .. args[3] or " rank 1"), "success")
+    return
 end, false, {
     { name="player", help="Player server id" },
     { name="job name" },
     { name="rank", help="This should be a number, default value is 1." }
 })
 
-AyseCore.Functions.AddCommand("setgroup", "Admin command, set player group.", function(source, args, rawCommand)
-    if not AyseCore.Functions.IsPlayerAdmin(source) then return end
+AFCore.Functions.AddCommand("setgroup", "Admin command, set player group.", function(source, args, rawCommand)
+    if not AFCore.Functions.IsPlayerAdmin(source) then return end
     local target = tonumber(args[1])
     if not target or GetPlayerPing(target) == 0 then
-        return {
-            color = {255, 0, 0},
-            args = {"Error", "target player not found."}
-        }
+        TriggerClientEvent("af-ui:Notify", source, "Target player not found", "error")
+        return
     end
     local group = args[3]
     if not group then
-        return {
-            color = {255, 0, 0},
-            args = {"Error", "group required."}
-        }
+        TriggerClientEvent("af-ui:Notify", source, "Group required", "error")
+        return
     end
-    local character = AyseCore.Functions.GetPlayer(target)
+    local character = AFCore.Functions.GetPlayer(target)
     if args[2] == "remove" then
-        AyseCore.Functions.RemovePlayerFromGroup(character.id, group)
-        return {
-            color = {0, 255, 0},
-            args = {"Success", GetPlayerName(target) .. " removed from " .. group}
-        }
+        AFCore.Functions.RemovePlayerFromGroup(character.id, group)
+        TriggerClientEvent("af-ui:Notify", source, GetPlayerName(target) .. " removed from " .. group, "success")
+        return
     elseif args[2] == "add" then
         local rank = args[4]
-        AyseCore.Functions.SetPlayerToGroup(character.id, group, rank)
-        return {
-            color = {0, 255, 0},
-            args = {"Success", GetPlayerName(target) .. " added to " .. group .. (rank and " rank " .. rank or " rank 1.")}
-        }
+        AFCore.Functions.SetPlayerToGroup(character.id, group, rank)
+        TriggerClientEvent("af-ui:Notify", source, GetPlayerName(target) .. " added to " .. group .. (rank and " rank " .. rank or " rank 1"), "success")
+        return
     end
 end, false, {
     { name="player", help="Player server id" },
@@ -95,14 +79,12 @@ end, false, {
     { name="rank", help="This should be a number, default value is 1 (not required if removing)." }
 })
 
-AyseCore.Functions.AddCommand("pay", "give cash to a nearby player", function(source, args, rawCommand)
+AFCore.Functions.AddCommand("pay", "give cash to a nearby player", function(source, args, rawCommand)
     local amount = args[1]
     if not amount or amount == 0 then return end
-    AyseCore.Functions.GiveCashToNearbyPlayer(source, amount)
-    return {
-        color = {0, 255, 0},
-        args = {"Success", amount .. " paid."}
-    }
+    AFCore.Functions.GiveCashToNearbyPlayer(source, amount)
+    TriggerClientEvent("af-ui:Notify", source, amount .. " Paid", "success")
+    return
 end, true, {
-    { name="Amount" },
+    { name="Amount" }
 })
