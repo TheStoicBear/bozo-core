@@ -1,23 +1,23 @@
-AyseCore = {}
-AyseCore.SelectedCharacter = nil
-AyseCore.Characters = {}
-AyseCore.Functions = {}
-AyseCore.Config = config
+AFCore = {}
+AFCore.SelectedCharacter = nil
+AFCore.Characters = {}
+AFCore.Functions = {}
+AFCore.Config = config
 
 if config.enableRichPresence then
     Citizen.CreateThread(function()
         while true do
-            if AyseCore.SelectedCharacter then
+            if AFCore.SelectedCharacter then
                 SetDiscordAppId(config.appId)
-                SetRichPresence(" Playing : " .. config.serverName .. " as " .. AyseCore.SelectedCharacter.firstName .. " " .. AyseCore.SelectedCharacter.lastName)
+                SetRichPresence("FiveM character framework")
                 SetDiscordRichPresenceAsset(config.largeLogo)
-                SetDiscordRichPresenceAssetText("Playing: " .. config.serverName)
+                SetDiscordRichPresenceAssetText(config.serverName)
                 SetDiscordRichPresenceAssetSmall(config.smallLogo)
-                SetDiscordRichPresenceAssetSmallText("Playing as: " .. AyseCore.SelectedCharacter.firstName .. " " .. AyseCore.SelectedCharacter.lastName)
+                SetDiscordRichPresenceAssetSmallText("Playing as: " .. AFCore.SelectedCharacter.firstName .. " " .. AFCore.SelectedCharacter.lastName)
                 SetDiscordRichPresenceAction(0, config.firstButtonName, config.firstButtonLink)
                 SetDiscordRichPresenceAction(1, config.secondButtonName, config.secondButtonLink)
             end
-            Citizen.Wait(config.updateIntervall * 1000)
+            Citizen.Wait(60000)
         end
     end)
 end
@@ -26,13 +26,13 @@ if config.customPauseMenu then
     Citizen.CreateThread(function()
         while true do
             Citizen.Wait(0)
-            if AyseCore.SelectedCharacter then
+            if AFCore.SelectedCharacter then
                 if IsPauseMenuActive() then
                     BeginScaleformMovieMethodOnFrontendHeader("SET_HEADING_DETAILS")
                     AddTextEntry("FE_THDR_GTAO", config.serverName) 
-                    ScaleformMovieMethodAddParamPlayerNameString(AyseCore.SelectedCharacter.firstName .. " " .. AyseCore.SelectedCharacter.lastName)
-                    PushScaleformMovieFunctionParameterString("Cash: $" .. tostring(AyseCore.SelectedCharacter.cash))
-                    PushScaleformMovieFunctionParameterString("Bank: $" .. tostring(AyseCore.SelectedCharacter.bank))
+                    ScaleformMovieMethodAddParamPlayerNameString(AFCore.SelectedCharacter.firstName .. " " .. AFCore.SelectedCharacter.lastName)
+                    PushScaleformMovieFunctionParameterString("Cash: $" .. tostring(AFCore.SelectedCharacter.cash))
+                    PushScaleformMovieFunctionParameterString("Bank: $" .. tostring(AFCore.SelectedCharacter.bank))
                     EndScaleformMovieMethod()
                 end
             end
@@ -41,9 +41,5 @@ if config.customPauseMenu then
 end
 
 AddEventHandler("playerSpawned", function()
-    if config.enablePVP then
-        SetCanAttackFriendly(PlayerPedId(), true, false)
-        NetworkSetFriendlyFireOption(true)
-    end
     print("^0AyseFramework")
 end)
