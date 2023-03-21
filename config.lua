@@ -1,53 +1,68 @@
 config = {
     serverName = "AyseFramework",
-    characterLimit = 4,
+    characterLimit = 2,
     customPauseMenu = true,
-    enablePVP = true,
     
     startingCash = 2500,
     startingBank = 8000,
-    
-    enableDiscordWhitelist = true,
-    notWhitelistedMessage = "You're not allowlisted in this server please join our discord to apply for a allowlist: https://discord.gg/TZfCJXKtYx",
-    whitelistRoles = {
-        "1029724677632954420"
-    },
 
     adminRoles = {
-        "1053933987514548245"
+        "1003594932658913330"
     },
 
     enableRichPresence = true,
-    updateIntervall = 60,
     appId = 1029306790120280114,
     largeLogo = "1024",
     smallLogo = "512",
     firstButtonName = "DISCORD",
-    firstButtonLink = "https://discord.gg/TZfCJXKtYx",
+    firstButtonLink = "https://discord.gg/qG2Xsm8gAz",
     secondButtonName = "JOIN",
     secondButtonLink = "https://cfx.re/join/yybb9k",
-
+    
     groups = {
-        ["Police"] = {
+        ["LSPD"] = {
+            "Cadet",
+            "Solo Cadet",
             "Officer",
-            "Senior officer",
+            "Senior Officer",
             "Corporal",
             "Sergeant",
             "Lieutenant",
-            "Cheif"
+            "Captain",
+            "Assistant Chief",
+            "Chief of Police"
+        },
+        ["BCSO"] = {
+            "Cadet",
+            "Solo Cadet",
+            "Deputy",
+            "Senior Deputy",
+            "Sergeant",
+            "Lieutenant",
+            "Undersheriff",
+            "Sheriff"
         },
         ["EMS"] = {
-            "EMS/EMT",
-            "Doctor"
+            "Trainee",
+            "Emergency Medical Technician",
+            "Advanced EMT",
+            "Paramedic",
+            "Lieutenant",
+            "Captain",
+            "Commissioner",
+            "Deputy Chief",
+            "Chief of EMS"
         },
         ["Mechanic"] = {
-            "Member",
-            "Boss"
+            "Employees",
+            "Management",
+            "Executives",
+            "CEO"
         }
     }
 }
 
 server_config = {
     discordServerToken = "MTAyOTMwNjc5MDEyMDI4MDExNA.GWnUbN.tLaHbyj7DFsacYFb8yVdjvb992osDy_bIZ4Y2c",
-    guildId = "1029723778009280523"
+    guildId = "762000965653495848"
 }
