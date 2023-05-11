@@ -1,24 +1,18 @@
 config = {
     serverName = "AyseFramework",
     characterLimit = 2,
-    customPauseMenu = true,
     
     startingCash = 2500,
     startingBank = 8000,
+
+    whitelistRoles = {
+        "762237659028258867"
+    },
 
     adminRoles = {
         "1003594932658913330"
     },
 
-    enableRichPresence = true,
-    appId = 1029306790120280114,
-    largeLogo = "1024",
-    smallLogo = "512",
-    firstButtonName = "DISCORD",
-    firstButtonLink = "https://discord.gg/qG2Xsm8gAz",
-    secondButtonName = "JOIN",
-    secondButtonLink = "https://cfx.re/join/yybb9k",
-    
     groups = {
         ["LSPD"] = {
             "Cadet",
