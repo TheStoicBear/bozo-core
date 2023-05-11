@@ -12,7 +12,7 @@ end
 
 function AFCore.Functions.GetPlayersFromCoords(distance, coords)
     if coords then
-        coords = type(coords) == 'table' and vec3(coords.x, coords.y, coords.z) or coords
+        coords = type(coords) == "table" and vec3(coords.x, coords.y, coords.z) or coords
     else
         coords = GetEntityCoords(PlayerPedId())
     end
@@ -70,3 +70,17 @@ function AFCore.callback.register(name, callback)
         TriggerServerEvent("af:callbacks", key, callback(...))
     end)
 end
+
+local function notify(text, type, length)
+    type = type or "primary"
+    length = length or 5000
+    SendNUIMessage({
+        notify = true,
+		text = text,
+        type = type,
+		length = length
+	})
+end
+
+RegisterNetEvent("af-core:notify", notify)
+exports("notify", notify)
