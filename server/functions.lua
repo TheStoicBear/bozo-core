@@ -89,16 +89,6 @@ function AFCore.Functions.GetPlayerIdentifierFromType(type, player)
     return nil
 end
 
-function AFCore.Functions.GetNearbyPedToPlayer(player)
-    local pedCoords = GetEntityCoords(GetPlayerPed(player))
-    for targetId, targetInfo in pairs(AFCore.Players) do
-        local targetCoords = GetEntityCoords(GetPlayerPed(targetId))
-        if #(pedCoords - targetCoords) < 2.0 and targetId ~= player then
-            return targetId, targetInfo
-        end
-    end 
-end
-
 function AFCore.Functions.UpdateMoney(player)
     local player = tonumber(player)
     local result = MySQL.query.await("SELECT cash, bank FROM characters WHERE character_id = ? LIMIT 1", {AFCore.Players[player].id})
@@ -116,26 +106,26 @@ function AFCore.Functions.TransferBank(amount, player, target, descriptionSender
     local player = tonumber(player)
     local target = tonumber(target)
     if player == target then
-        TriggerClientEvent("af-ui:Notify", player, "You cant send money to yourself", "error")
+        TriggerClientEvent("af-core:notify", player, "You cant send money to yourself", "error")
         return false
     elseif GetPlayerPing(target) == 0 then
-        TriggerClientEvent("af-ui:Notify", player, "That player does not exist", "error")
+        TriggerClientEvent("af-core:notify", player, "That player does not exist", "error")
         return false
     elseif amount <= 0 then
-        TriggerClientEvent("af-ui:Notify", player, "You cant send that amount", "error")
+        TriggerClientEvent("af-core:notify", player, "You cant send that amount", "error")
         return false
     elseif AFCore.Players[player].bank < amount then
-        TriggerClientEvent("af-ui:Notify", player, "You dont have enough money", "error")
+        TriggerClientEvent("af-core:notify", player, "You dont have enough money", "error")
         return false
     else
         MySQL.query.await("UPDATE characters SET bank = bank - ? WHERE character_id = ?", {amount, AFCore.Players[player].id})
         AFCore.Functions.UpdateMoney(player)
         TriggerEvent("af:moneyChange", player, "bank", amount, "remove", descriptionSender or "Transfer")
-        TriggerClientEvent("af-ui:Notify", player, "You paid " .. AFCore.Players[target].firstName .. " " .. AFCore.Players[target].lastName .. " $" .. amount .. "", "success")
+        TriggerClientEvent("af-core:notify", player, "You paid " .. AFCore.Players[target].firstName .. " " .. AFCore.Players[target].lastName .. " $" .. amount .. "", "success")
         MySQL.query.await("UPDATE characters SET bank = bank + ? WHERE character_id = ?", {amount, AFCore.Players[target].id})
         AFCore.Functions.UpdateMoney(target)
         TriggerEvent("af:moneyChange", target, "bank", amount, "add", descriptionReceiver or "Transfer")
-        TriggerClientEvent("af-ui:Notify", target, AFCore.Players[player].firstName .. " " .. AFCore.Players[player].lastName .. " sent you $" .. amount .. "", "success")
+        TriggerClientEvent("af-core:notify", target, AFCore.Players[player].firstName .. " " .. AFCore.Players[player].lastName .. " sent you $" .. amount .. "", "success")
         return true
     end
 end
@@ -145,38 +135,28 @@ function AFCore.Functions.GiveCash(amount, player, target)
     local player = tonumber(player)
     local target = tonumber(target)
     if player == target then
-        TriggerClientEvent("af-ui:Notify", player, "You cant send money to yourself", "error")
+        TriggerClientEvent("af-core:notify", player, "You cant send money to yourself", "error")
         return false
     elseif GetPlayerPing(target) == 0 then
-        TriggerClientEvent("af-ui:Notify", player, "That player does not exist", "error")
+        TriggerClientEvent("af-core:notify", player, "That player does not exist", "error")
         return false
     elseif amount <= 0 then
-        TriggerClientEvent("af-ui:Notify", player, "You cant give that amount", "error")
+        TriggerClientEvent("af-core:notify", player, "You cant give that amount", "error")
         return false
     elseif AFCore.Players[player].cash < amount then
-        TriggerClientEvent("af-ui:Notify", player, "You dont have enough money", "error")
+        TriggerClientEvent("af-core:notify", player, "You dont have enough money", "error")
         return false
     else
         MySQL.query.await("UPDATE characters SET cash = cash - ? WHERE character_id = ?", {amount, AFCore.Players[player].id})
         AFCore.Functions.UpdateMoney(player)
         TriggerEvent("af:moneyChange", player, "cash", amount, "remove")
-        TriggerClientEvent("af-ui:Notify", player, "You gave " .. AFCore.Players[target].firstName .. " " .. AFCore.Players[target].lastName .. " $" .. amount .. "", "success")
+        TriggerClientEvent("af-core:notify", player, "You gave " .. AFCore.Players[target].firstName .. " " .. AFCore.Players[target].lastName .. " $" .. amount .. "", "success")
         MySQL.query.await("UPDATE characters SET cash = cash + ? WHERE character_id = ?", {amount, AFCore.Players[target].id})
         AFCore.Functions.UpdateMoney(target)
         TriggerEvent("af:moneyChange", target, "cash", amount, "add")
-        TriggerClientEvent("af-ui:Notify", target, " Received $" .. amount .. "", "success")
+        TriggerClientEvent("af-core:notify", target, " Received $" .. amount .. "", "success")
         return true
     end
-end
-
-function AFCore.Functions.GiveCashToNearbyPlayer(player, amount)
-    local targetId = AFCore.Functions.GetNearbyPedToPlayer(player)
-    if targetId then
-        AFCore.Functions.GiveCash(amount, player, targetId)
-        return true
-    end
-    TriggerClientEvent("af-ui:Notify", player, "No players nearby", "error")
-    return false
 end
 
 function AFCore.Functions.WithdrawMoney(amount, player)
@@ -546,13 +526,10 @@ function AFCore.Functions.AddCommand(name, help, callback, argsrequired, argumen
     local arguments = arguments or {}
     RegisterCommand(commandName, function(source, args, rawCommand)
         if argsrequired and #args < #arguments then
-            TriggerClientEvent("af-ui:Notify", source, "All arguments required", "error")
+            TriggerClientEvent("af-core:notify", source, "All arguments required", "error")
             return
         end
         callback(source, args, rawCommand)
-        local message = callback(source, args, rawCommand)
-        if not message then return end
-        TriggerClientEvent("chat:addMessage", source, message)
     end, false)
     AFCore.Commands[commandName] = {
         name = commandName,
