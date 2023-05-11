@@ -1,5 +1,8 @@
 <h1 align='center'>af-core</h1>
 
+## Dependency
+### [oxmysql](https://github.com/overextended/oxmysql/releases)
+
 ## License
 
     AyseFramework
