@@ -1,6 +1,6 @@
 author "helmimarif"
 description "AyseFramework Core"
-version "1.0"
+version "2.1.4"
 
 fx_version "cerulean"
 game "gta5"
@@ -27,15 +27,16 @@ server_scripts {
     "shared/import.lua"
 }
 
-exports {
-    "GetCoreObject"
+files {
+	"ui/ui.html",
+	"ui/script.js", 
+	"ui/style.css"
 }
 
-server_exports {
-    "GetCoreObject"
-}
+ui_page "ui/ui.html"
 
-dependencies {
-    "oxmysql",
-    "af-ui"
-}
+export "GetCoreObject"
+
+server_export "GetCoreObject"
+
+dependency "oxmysql"
