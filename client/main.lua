@@ -8,14 +8,14 @@ AFCore.Config = config
 Citizen.CreateThread(function()
     while true do
         if AFCore.SelectedCharacter then
-            SetDiscordAppId(1029306790120280114)   -- Discord API App Id
+            SetDiscordAppId(1029306790120280114) -- Discord API App Id
             SetRichPresence(AFCore.SelectedCharacter.job .. " - " .. AFCore.SelectedCharacter.firstName .. " " .. AFCore.SelectedCharacter.lastName)
-            SetDiscordRichPresenceAsset("icon")   -- Rich Presence Asset Name
+            SetDiscordRichPresenceAsset("icon") -- Rich Presence Asset Name
             SetDiscordRichPresenceAssetText(config.serverName)
-            SetDiscordRichPresenceAction(0, "DISCORD", "https://discord.gg/qG2Xsm8gAz")     -- Rich Presence First Button Display
-            SetDiscordRichPresenceAction(1, "JOIN", "https://cfx.re/join/yybb9k")   -- Rich Presence Second Button Display
+            SetDiscordRichPresenceAction(0, "DISCORD", "https://discord.gg/qG2Xsm8gAz") -- Rich Presence First Button Display
+            SetDiscordRichPresenceAction(1, "JOIN", "https://cfx.re/join/jg4jra") -- Rich Presence Second Button Display
         end
-        Citizen.Wait(60000)     -- Status Update Delay
+        Citizen.Wait(60000) -- Status Update Delay
     end
 end)
 
