@@ -1,12 +1,12 @@
-<h1 align='center'>af-core</h1>
+<h1 align='center'>bozo-core</h1>
 
 ## Dependency
 ### [oxmysql](https://github.com/overextended/oxmysql/releases)
 
 ## License
 
-    AyseFramework
-    Copyright (C) 2023 helmimarif
+    BozoFramework
+    Copyright (C) 2023 TheStoicBear
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
