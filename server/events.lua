@@ -1,6 +1,6 @@
 AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
     local player = source
-    local discordIdentifier = AFCore.Functions.GetPlayerIdentifierFromType("discord", player)
+    local discordIdentifier = BozoCore.Functions.GetPlayerIdentifierFromType("discord", player)
 
     deferrals.defer()
     Wait(0)
@@ -11,7 +11,7 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
         deferrals.done("Your discord isn't connected to FiveM, make sure discord is open and restart FiveM.")
     else
         local discordUserId = discordIdentifier:gsub("discord:", "")
-        local discordInfo = AFCore.Functions.GetUserDiscordInfo(discordUserId)
+        local discordInfo = BozoCore.Functions.GetUserDiscordInfo(discordUserId)
         for _, whitelistRole in pairs(config.whitelistRoles) do
             if whitelistRole == 0 or whitelistRole == "0" or (discordInfo and discordInfo.roles[whitelistRole]) then
                 deferrals.done()
@@ -22,65 +22,65 @@ AddEventHandler("playerConnecting", function(name, setKickReason, deferrals)
     end
 end)
 
-RegisterNetEvent("af:GetCharacters", function()
+RegisterNetEvent("BozoCore:GetCharacters", function()
     local player = source
-    TriggerClientEvent("af:returnCharacters", player, AFCore.Functions.GetPlayerCharacters(player))
+    TriggerClientEvent("BozoCore:returnCharacters", player, BozoCore.Functions.GetPlayerCharacters(player))
 end)
 
-RegisterNetEvent("af:newCharacter", function(newCharacter)
+RegisterNetEvent("BozoCore:newCharacter", function(newCharacter)
     local player = source
-    AFCore.Functions.CreateCharacter(player, newCharacter.firstName, newCharacter.lastName, newCharacter.dob, newCharacter.gender, newCharacter.cash, newCharacter.bank)
+    BozoCore.Functions.CreateCharacter(player, newCharacter.firstName, newCharacter.lastName, newCharacter.dob, newCharacter.gender, newCharacter.cash, newCharacter.bank)
 end)
 
-RegisterNetEvent("af:editCharacter", function(newCharacter)
+RegisterNetEvent("BozoCore:editCharacter", function(newCharacter)
     local player = source
-    local characters = AFCore.Functions.GetPlayerCharacters(player)
+    local characters = BozoCore.Functions.GetPlayerCharacters(player)
     if not characters[newCharacter.id] then return end
-    AFCore.Functions.UpdateCharacterData(newCharacter.id, newCharacter.firstName, newCharacter.lastName, newCharacter.dob, newCharacter.gender)
+    BozoCore.Functions.UpdateCharacterData(newCharacter.id, newCharacter.firstName, newCharacter.lastName, newCharacter.dob, newCharacter.gender)
 end)
 
-RegisterNetEvent("af:deleteCharacter", function(characterId)
+RegisterNetEvent("BozoCore:deleteCharacter", function(characterId)
     local player = source
-    local characters = AFCore.Functions.GetPlayerCharacters(player)
+    local characters = BozoCore.Functions.GetPlayerCharacters(player)
     if not characters[characterId] then return end
-    AFCore.Functions.DeleteCharacter(characterId)
+    BozoCore.Functions.DeleteCharacter(characterId)
 end)
 
-RegisterNetEvent("af:setCharacterOnline", function(id)
+RegisterNetEvent("BozoCore:setCharacterOnline", function(id)
     local player = source
-    local characters = AFCore.Functions.GetPlayerCharacters(player)
+    local characters = BozoCore.Functions.GetPlayerCharacters(player)
     if not characters[id] then return end
-    AFCore.Functions.SetActiveCharacter(player, id)
+    BozoCore.Functions.SetActiveCharacter(player, id)
 end)
 
-RegisterNetEvent("af:updateClothes", function(clothing)
+RegisterNetEvent("BozoCore:updateClothes", function(clothing)
     local player = source
-    local character = AFCore.Players[player]
-    AFCore.Functions.SetPlayerData(character.id, "clothing", clothing)
+    local character = BozoCore.Players[player]
+    BozoCore.Functions.SetPlayerData(character.id, "clothing", clothing)
 end)
 
-RegisterNetEvent("af:exitGame", function()
+RegisterNetEvent("BozoCore:exitGame", function()
     local player = source
     DropPlayer(player, "Disconnected.")
 end)
 
 AddEventHandler("playerDropped", function()
     local player = source
-    local character = AFCore.Players[player]
+    local character = BozoCore.Players[player]
     if character then
         local ped = GetPlayerPed(player)
         local lastLocation = GetEntityCoords(ped)
-        AFCore.Functions.UpdateLastLocation(character.id, {x = lastLocation.x, y = lastLocation.y, z = lastLocation.z})
+        BozoCore.Functions.UpdateLastLocation(character.id, {x = lastLocation.x, y = lastLocation.y, z = lastLocation.z})
     end
-    TriggerEvent("af:characterUnloaded", player, character)
+    TriggerEvent("BozoCore:characterUnloaded", player, character)
     character = nil
 end)
 
 AddEventHandler("playerJoining", function()
     local src = source
-    local discordUserId = AFCore.Functions.GetPlayerIdentifierFromType("discord", src):gsub("discord:", "")
-    local discordInfo = AFCore.Functions.GetUserDiscordInfo(discordUserId)
-    AFCore.PlayersDiscordInfo[src] = discordInfo
+    local discordUserId = BozoCore.Functions.GetPlayerIdentifierFromType("discord", src):gsub("discord:", "")
+    local discordInfo = BozoCore.Functions.GetUserDiscordInfo(discordUserId)
+    BozoCore.PlayersDiscordInfo[src] = discordInfo
 end)
 
 AddEventHandler("onResourceStart", function(resourceName)
@@ -88,11 +88,11 @@ AddEventHandler("onResourceStart", function(resourceName)
         return
     end 
     Wait(1000)
-    if not next(AFCore.PlayersDiscordInfo) then
+    if not next(BozoCore.PlayersDiscordInfo) then
         for _, playerId in ipairs(GetPlayers()) do
-            local discordUserId = AFCore.Functions.GetPlayerIdentifierFromType("discord", playerId):gsub("discord:", "")
-            local discordInfo = AFCore.Functions.GetUserDiscordInfo(discordUserId)
-            AFCore.PlayersDiscordInfo[tonumber(playerId)] = discordInfo
+            local discordUserId = BozoCore.Functions.GetPlayerIdentifierFromType("discord", playerId):gsub("discord:", "")
+            local discordInfo = BozoCore.Functions.GetUserDiscordInfo(discordUserId)
+            BozoCore.PlayersDiscordInfo[tonumber(playerId)] = discordInfo
         end
     end
 end)
