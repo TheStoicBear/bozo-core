@@ -1,5 +1,5 @@
-AFCore.Functions.AddCommand("setmoney", "Admin command, manage player money.", function(source, args, rawCommand)
-    if not AFCore.Functions.IsPlayerAdmin(source) then
+BozoCore.Functions.AddCommand("setmoney", "Admin command, manage player money.", function(source, args, rawCommand)
+    if not BozoCore.Functions.IsPlayerAdmin(source) then
         return
         TriggerClientEvent("af-core:notify", source, "You dont have access to this command", "error")
     end
@@ -12,13 +12,13 @@ AFCore.Functions.AddCommand("setmoney", "Admin command, manage player money.", f
     if moneyType ~= "bank" and moneyType ~= "cash" then return end
     if action == "remove" then
         if not amount or amount < 1 then return end
-        AFCore.Functions.DeductMoney(amount, target, moneyType)
+        BozoCore.Functions.DeductMoney(amount, target, moneyType)
     elseif action == "add" then
         if not amount or amount < 1 then return end
-        AFCore.Functions.AddMoney(amount, target, moneyType)
+        BozoCore.Functions.AddMoney(amount, target, moneyType)
     elseif action == "set" then
-        local character = AFCore.Functions.GetPlayer(target)
-        AFCore.Functions.SetPlayerData(character.id, moneyType, amount)
+        local character = BozoCore.Functions.GetPlayer(target)
+        BozoCore.Functions.SetPlayerData(character.id, moneyType, amount)
     end
 end, true, {
     { name="player", help="Player server id" },
@@ -27,8 +27,8 @@ end, true, {
     { name="amount" }
 })
 
-AFCore.Functions.AddCommand("setjob", "Admin command, set player job.", function(source, args, rawCommand)
-    if not AFCore.Functions.IsPlayerAdmin(source) then
+BozoCore.Functions.AddCommand("setjob", "Admin command, set player job.", function(source, args, rawCommand)
+    if not BozoCore.Functions.IsPlayerAdmin(source) then
         return
         TriggerClientEvent("af-core:notify", source, "You dont have access to this command", "error")
     end
@@ -42,8 +42,8 @@ AFCore.Functions.AddCommand("setjob", "Admin command, set player job.", function
         return
         TriggerClientEvent("af-core:notify", source, "Job required", "error")
     end
-    local character = AFCore.Functions.GetPlayer(target)
-    AFCore.Functions.SetPlayerJob(character.id, job, args[3])
+    local character = BozoCore.Functions.GetPlayer(target)
+    BozoCore.Functions.SetPlayerJob(character.id, job, args[3])
     return
     TriggerClientEvent("af-core:notify", source, GetPlayerName(target) .. " job set to " .. job .. (args[3] and " rank " .. args[3] or " rank 1"), "success")
 end, false, {
@@ -52,8 +52,8 @@ end, false, {
     { name="rank", help="This should be a number, default value is 1" }
 })
 
-AFCore.Functions.AddCommand("setgroup", "Admin command, set player group.", function(source, args, rawCommand)
-    if not AFCore.Functions.IsPlayerAdmin(source) then
+BozoCore.Functions.AddCommand("setgroup", "Admin command, set player group.", function(source, args, rawCommand)
+    if not BozoCore.Functions.IsPlayerAdmin(source) then
         return
         TriggerClientEvent("af-core:notify", source, "You dont have access to this command", "error")
     end
@@ -67,14 +67,14 @@ AFCore.Functions.AddCommand("setgroup", "Admin command, set player group.", func
         return
         TriggerClientEvent("af-core:notify", source, "Group required", "error")
     end
-    local character = AFCore.Functions.GetPlayer(target)
+    local character = BozoCore.Functions.GetPlayer(target)
     if args[2] == "remove" then
-        AFCore.Functions.RemovePlayerFromGroup(character.id, group)
+        BozoCore.Functions.RemovePlayerFromGroup(character.id, group)
         return
         TriggerClientEvent("af-core:notify", source, GetPlayerName(target) .. " removed from " .. group, "success")
     elseif args[2] == "add" then
         local rank = args[4]
-        AFCore.Functions.SetPlayerToGroup(character.id, group, rank)
+        BozoCore.Functions.SetPlayerToGroup(character.id, group, rank)
         return
         TriggerClientEvent("af-core:notify", source, GetPlayerName(target) .. " added to " .. group .. (rank and " rank " .. rank or " rank 1"), "success")
     end
