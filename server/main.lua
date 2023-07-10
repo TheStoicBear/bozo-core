@@ -1,12 +1,12 @@
-AFCore = {}
-AFCore.Players = {}
-AFCore.Functions = {}
-AFCore.Commands = {}
-AFCore.PlayersDiscordInfo = {}
-AFCore.Config = config
+BozoCore = {}
+BozoCore.Players = {}
+BozoCore.Functions = {}
+BozoCore.Commands = {}
+BozoCore.PlayersDiscordInfo = {}
+BozoCore.Config = config
 
 function GetCoreObject()
-    return AFCore
+    return BozoCore
 end
 
 for _, roleid in pairs(config.adminRoles) do
