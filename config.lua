@@ -1,5 +1,5 @@
 config = {
-    serverName = "AyseFramework",
+    serverName = "BozoFramework",
     characterLimit = 2,
     
     startingCash = 2500,
