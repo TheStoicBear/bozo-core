@@ -1,5 +1,5 @@
-author "helmimarif"
-description "AyseFramework Core"
+author "TheStoicBear"
+description "Bozo Core"
 version "2.1.5"
 
 fx_version "cerulean"
