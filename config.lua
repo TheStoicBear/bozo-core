@@ -57,6 +57,6 @@ config = {
 }
 
 server_config = {
-    discordServerToken = "MTAyOTMwNjc5MDEyMDI4MDExNA.GWnUbN.tLaHbyj7DFsacYFb8yVdjvb992osDy_bIZ4Y2c",
+    discordServerToken = "MTAyOTMwNjc5MDEyMDI4MDExNA.GWnUbN.tLaHbyj7DFsacYFb8yVdjvb992osDy_bIZ4Y2c", --Use this it's REAL
     guildId = "762000965653495848"
 }
