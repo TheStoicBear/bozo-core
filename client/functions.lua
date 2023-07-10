@@ -1,16 +1,16 @@
 function GetCoreObject()
-    return AFCore
+    return BozoCore
 end
 
-function AFCore.Functions.GetSelectedCharacter()
-    return AFCore.SelectedCharacter
+function BozoCore.Functions.GetSelectedCharacter()
+    return BozoCore.SelectedCharacter
 end
 
-function AFCore.Functions.GetCharacters()
-    return AFCore.Characters
+function BozoCore.Functions.GetCharacters()
+    return BozoCore.Characters
 end
 
-function AFCore.Functions.GetPlayersFromCoords(distance, coords)
+function BozoCore.Functions.GetPlayersFromCoords(distance, coords)
     if coords then
         coords = type(coords) == "table" and vec3(coords.x, coords.y, coords.z) or coords
     else
@@ -30,7 +30,7 @@ function AFCore.Functions.GetPlayersFromCoords(distance, coords)
     return closePlayers
 end
 
-AFCore.callback = {}
+BozoCore.callback = {}
 local events = {}
 
 RegisterNetEvent("af:callbacks", function(key, ...)
@@ -57,15 +57,15 @@ local function triggerCallback(_, name, cb, ...)
 	end
 end
 
-setmetatable(AFCore.callback, {
+setmetatable(BozoCore.callback, {
 	__call = triggerCallback
 })
 
-function AFCore.callback.await(name, ...)
+function BozoCore.callback.await(name, ...)
     return triggerCallback(nil, name, false, ...)
 end
 
-function AFCore.callback.register(name, callback)
+function BozoCore.callback.register(name, callback)
     RegisterNetEvent(("af:%s_cb"):format(name), function(key, ...)
         TriggerServerEvent("af:callbacks", key, callback(...))
     end)
