@@ -1,1 +1,1 @@
-AFCore = exports["af-core"]:GetCoreObject()
+BozoCore = exports["af-core"]:GetCoreObject()
