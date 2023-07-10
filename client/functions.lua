@@ -33,14 +33,14 @@ end
 BozoCore.callback = {}
 local events = {}
 
-RegisterNetEvent("af:callbacks", function(key, ...)
+RegisterNetEvent("bozo:callbacks", function(key, ...)
 	local cb = events[key]
 	return cb and cb(...)
 end)
 
 local function triggerCallback(_, name, cb, ...)
     local key = ("%s:%s"):format(name, math.random(0, 100000))
-	TriggerServerEvent(("af:%s_cb"):format(name), key, ...)
+	TriggerServerEvent(("bozo:%s_cb"):format(name), key, ...)
     local promise = not cb and promise.new()
 	events[key] = function(response, ...)
         response = { response, ... }
@@ -66,8 +66,8 @@ function BozoCore.callback.await(name, ...)
 end
 
 function BozoCore.callback.register(name, callback)
-    RegisterNetEvent(("af:%s_cb"):format(name), function(key, ...)
-        TriggerServerEvent("af:callbacks", key, callback(...))
+    RegisterNetEvent(("bozo:%s_cb"):format(name), function(key, ...)
+        TriggerServerEvent("bozo:callbacks", key, callback(...))
     end)
 end
 
@@ -82,5 +82,5 @@ local function notify(text, type, length)
 	})
 end
 
-RegisterNetEvent("af-core:notify", notify)
+RegisterNetEvent("bozo-core:notify", notify)
 exports("notify", notify)
