@@ -1,3 +1,7 @@
+
+![Bozo](https://github.com/TheStoicBear/bozo-core/assets/112611821/8f8f1c5e-7750-4250-a08e-1262010f48a1)
+
+
 # BozoFramework
 
 **BozoFramework** is a work in progress framework that aims to provide realistic and unique resources for developers. It offers a range of functionalities for character creation, character data management, and various server-side functions. Please note that this framework is intended as a joke and should not be taken seriously.
@@ -80,5 +84,7 @@ This function retrieves the core object of the BozoFramework. It can be used to 
 
 ## Acknowledgements
 
-The BozoFramework is a satirical project and is not meant to be taken seriously. It was inspired by the ND-Framework and created for entertainment purposes only.
+
+
+# The BozoFramework is a satirical project and is not meant to be taken seriously. It was inspired by the ND-Framework and created for entertainment purposes only. This comes from a member known as @helmimarif that stole the code to create where this was forked from.
 
