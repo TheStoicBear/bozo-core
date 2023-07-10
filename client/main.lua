@@ -1,15 +1,15 @@
-AFCore = {}
-AFCore.SelectedCharacter = nil
-AFCore.Characters = {}
-AFCore.Functions = {}
-AFCore.Config = config
+BozoCore = {}
+BozoCore.SelectedCharacter = nil
+BozoCore.Characters = {}
+BozoCore.Functions = {}
+BozoCore.Config = config
 
 -- Discord Rich Presence
 Citizen.CreateThread(function()
     while true do
-        if AFCore.SelectedCharacter then
+        if BozoCore.SelectedCharacter then
             SetDiscordAppId(1029306790120280114) -- Discord API App Id
-            SetRichPresence(AFCore.SelectedCharacter.job .. " - " .. AFCore.SelectedCharacter.firstName .. " " .. AFCore.SelectedCharacter.lastName)
+            SetRichPresence(BozoCore.SelectedCharacter.job .. " - " .. BozoCore.SelectedCharacter.firstName .. " " .. BozoCore.SelectedCharacter.lastName)
             SetDiscordRichPresenceAsset("icon") -- Rich Presence Asset Name
             SetDiscordRichPresenceAssetText(config.serverName)
             SetDiscordRichPresenceAction(0, "DISCORD", "https://discord.gg/qG2Xsm8gAz") -- Rich Presence First Button Display
@@ -22,13 +22,13 @@ end)
 Citizen.CreateThread(function()
     while true do
         Citizen.Wait(0)
-        if AFCore.SelectedCharacter then
+        if BozoCore.SelectedCharacter then
             if IsPauseMenuActive() then
                 BeginScaleformMovieMethodOnFrontendHeader("SET_HEADING_DETAILS")
                 AddTextEntry("FE_THDR_GTAO", config.serverName) 
-                ScaleformMovieMethodAddParamPlayerNameString(AFCore.SelectedCharacter.firstName .. " " .. AFCore.SelectedCharacter.lastName)
-                PushScaleformMovieFunctionParameterString("Cash: $" .. tostring(AFCore.SelectedCharacter.cash))
-                PushScaleformMovieFunctionParameterString("Bank: $" .. tostring(AFCore.SelectedCharacter.bank))
+                ScaleformMovieMethodAddParamPlayerNameString(BozoCore.SelectedCharacter.firstName .. " " .. BozoCore.SelectedCharacter.lastName)
+                PushScaleformMovieFunctionParameterString("Cash: $" .. tostring(BozoCore.SelectedCharacter.cash))
+                PushScaleformMovieFunctionParameterString("Bank: $" .. tostring(BozoCore.SelectedCharacter.bank))
                 EndScaleformMovieMethod()
             end
         end
