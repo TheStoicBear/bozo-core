@@ -12,8 +12,8 @@ Citizen.CreateThread(function()
             SetRichPresence(BozoCore.SelectedCharacter.job .. " - " .. BozoCore.SelectedCharacter.firstName .. " " .. BozoCore.SelectedCharacter.lastName)
             SetDiscordRichPresenceAsset("icon") -- Rich Presence Asset Name
             SetDiscordRichPresenceAssetText(config.serverName)
-            SetDiscordRichPresenceAction(0, "DISCORD", "https://discord.gg/qG2Xsm8gAz") -- Rich Presence First Button Display
-            SetDiscordRichPresenceAction(1, "JOIN", "https://cfx.re/join/jg4jra") -- Rich Presence Second Button Display
+            SetDiscordRichPresenceAction(0, "DISCORD", "https://discord.gg/andys-development-857672921912836116") -- Rich Presence First Button Display
+            SetDiscordRichPresenceAction(1, "JOIN", "https://discord.gg/andys-development-857672921912836116") -- Rich Presence Second Button Display
         end
         Citizen.Wait(60000) -- Status Update Delay
     end
@@ -36,5 +36,5 @@ Citizen.CreateThread(function()
 end)
 
 AddEventHandler("playerSpawned", function()
-    print("AyseFramework")
+    print("BozoFramework")
 end)
